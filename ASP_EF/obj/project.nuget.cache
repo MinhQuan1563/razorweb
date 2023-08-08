@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "R7Ro3xmDZ8wC2RMtLadn75VNxvwv3eDnABxUu1qnsWR15gms0VxqUDmBZZe1YuWujVxZyXTgFk08soSkOFpc6Q==",
+  "dgSpecHash": "T5fEXfpscMu6V0mgYN+jXKWqtFIBXwbNIpqLEmgRLd8pfbd9Xq6y49vM7rx52Xx1L03yV9i7sNoyCo41NWQOgw==",
   "success": true,
-  "projectFilePath": "D:\\MINHQUAN\\Workspace\\C#\\ASP_EF\\ASP_EF\\ASP_EF.csproj",
+  "projectFilePath": "D:\\MINHQUAN\\Workspace\\C#\\razorweb\\ASP_EF\\ASP_EF.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\domin\\.nuget\\packages\\azure.core\\1.24.0\\azure.core.1.24.0.nupkg.sha512",
     "C:\\Users\\domin\\.nuget\\packages\\azure.identity\\1.6.0\\azure.identity.1.6.0.nupkg.sha512",

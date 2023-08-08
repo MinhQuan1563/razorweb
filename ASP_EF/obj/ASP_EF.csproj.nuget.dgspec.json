@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\MINHQUAN\\Workspace\\C#\\ASP_EF\\ASP_EF\\ASP_EF.csproj": {}
+    "D:\\MINHQUAN\\Workspace\\C#\\razorweb\\ASP_EF\\ASP_EF.csproj": {}
   },
   "projects": {
-    "D:\\MINHQUAN\\Workspace\\C#\\ASP_EF\\ASP_EF\\ASP_EF.csproj": {
+    "D:\\MINHQUAN\\Workspace\\C#\\razorweb\\ASP_EF\\ASP_EF.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\MINHQUAN\\Workspace\\C#\\ASP_EF\\ASP_EF\\ASP_EF.csproj",
+        "projectUniqueName": "D:\\MINHQUAN\\Workspace\\C#\\razorweb\\ASP_EF\\ASP_EF.csproj",
         "projectName": "ASP_EF",
-        "projectPath": "D:\\MINHQUAN\\Workspace\\C#\\ASP_EF\\ASP_EF\\ASP_EF.csproj",
+        "projectPath": "D:\\MINHQUAN\\Workspace\\C#\\razorweb\\ASP_EF\\ASP_EF.csproj",
         "packagesPath": "C:\\Users\\domin\\.nuget\\packages\\",
-        "outputPath": "D:\\MINHQUAN\\Workspace\\C#\\ASP_EF\\ASP_EF\\obj\\",
+        "outputPath": "D:\\MINHQUAN\\Workspace\\C#\\razorweb\\ASP_EF\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\domin\\AppData\\Roaming\\NuGet\\NuGet.Config",
