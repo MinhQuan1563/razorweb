@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using ASP_EF.Models;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ASP_EF.Pages.Blog
 {
+    [Authorize]
     public class IndexModel : PageModel
     {
         private readonly ASP_EF.Models.MyBlogContext _context;

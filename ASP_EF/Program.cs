@@ -27,27 +27,29 @@ namespace ASP_EF
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            var services = builder.Services;
+
             // Add services to the container.
-            builder.Services.AddRazorPages();
+            services.AddRazorPages();
 
             // DbContext
-            builder.Services.AddDbContext<MyBlogContext>(options =>
+            services.AddDbContext<MyBlogContext>(options =>
             {
                 string connectString = builder.Configuration.GetConnectionString("MyBlogContext");
                 options.UseSqlServer(connectString);
             });
 
             // Đăng ký Identity
-            builder.Services.AddIdentity<AppUser, IdentityRole>()
-                            .AddEntityFrameworkStores<MyBlogContext>()
-                            .AddDefaultTokenProviders();
+            services.AddIdentity<AppUser, IdentityRole>()
+                    .AddEntityFrameworkStores<MyBlogContext>()
+                    .AddDefaultTokenProviders();
 
-            /*builder.Services.AddDefaultIdentity<AppUser>()
+            /*services.AddDefaultIdentity<AppUser>()
                             .AddEntityFrameworkStores<MyBlogContext>()
                             .AddDefaultTokenProviders();*/
 
             // Truy cập IdentityOptions
-            builder.Services.Configure<IdentityOptions>(options => {
+            services.Configure<IdentityOptions>(options => {
                 // Thiết lập về Password
                 options.Password.RequireDigit = false; // Không bắt phải có số
                 options.Password.RequireLowercase = false; // Không bắt phải có chữ thường
@@ -69,14 +71,22 @@ namespace ASP_EF
                 // Cấu hình đăng nhập.
                 options.SignIn.RequireConfirmedEmail = true;            // Cấu hình xác thực địa chỉ email (email phải tồn tại)
                 options.SignIn.RequireConfirmedPhoneNumber = false;     // Xác thực số điện thoại
-
+                options.SignIn.RequireConfirmedAccount = true;
             });
 
             // Đăng ký dịch vụ Mail
-            builder.Services.AddOptions();
+            services.AddOptions();
             var mailsetting = builder.Configuration.GetSection("MailSettings");
             builder.Services.Configure<MailSettings>(mailsetting);
             builder.Services.AddSingleton<IEmailSender, SendMailService>();
+
+            // 
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.LoginPath = "/login/";
+                options.LogoutPath = "/logout/";
+                options.AccessDeniedPath = "/truycapbituchoi.html/";
+            });
 
             var app = builder.Build();
 
