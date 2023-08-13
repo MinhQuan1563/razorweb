@@ -113,7 +113,7 @@ namespace ASP_EF.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("articles");
+                    b.ToTable("articles", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
