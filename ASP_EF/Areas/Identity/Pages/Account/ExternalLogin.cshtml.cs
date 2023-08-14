@@ -93,22 +93,26 @@ namespace ASP_EF.Areas.Identity.Pages.Account
         {
             // Request a redirect to the external login provider.
             var redirectUrl = Url.Page("./ExternalLogin", pageHandler: "Callback", values: new { returnUrl });
+
             var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
+
             return new ChallengeResult(provider, properties);
         }
 
         public async Task<IActionResult> OnGetCallbackAsync(string returnUrl = null, string remoteError = null)
         {
+
             returnUrl = returnUrl ?? Url.Content("~/");
             if (remoteError != null)
             {
-                ErrorMessage = $"Error from external provider: {remoteError}";
+                ErrorMessage = $"Lỗi từ dịch vụ ngoài: {remoteError}";
                 return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
             }
+
             var info = await _signInManager.GetExternalLoginInfoAsync();
             if (info == null)
             {
-                ErrorMessage = "Error loading external login information.";
+                ErrorMessage = "Không lấy được thông tin từ dịch vụ ngoài.";
                 return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
             }
 
@@ -116,6 +120,7 @@ namespace ASP_EF.Areas.Identity.Pages.Account
             var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false, bypassTwoFactor: true);
             if (result.Succeeded)
             {
+                // Account: LoginProvider
                 _logger.LogInformation("{Name} logged in with {LoginProvider} provider.", info.Principal.Identity.Name, info.LoginProvider);
                 return LocalRedirect(returnUrl);
             }
@@ -125,6 +130,9 @@ namespace ASP_EF.Areas.Identity.Pages.Account
             }
             else
             {
+                // Có 2 TH xảy ra: 
+                //      + Chưa có tài khoản
+                //      + Có tài khoản nhưng chưa liên kết
                 // If the user does not have an account, then ask the user to create an account.
                 ReturnUrl = returnUrl;
                 ProviderDisplayName = info.ProviderDisplayName;
@@ -141,17 +149,90 @@ namespace ASP_EF.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnPostConfirmationAsync(string returnUrl = null)
         {
-            returnUrl = returnUrl ?? Url.Content("~/");
+            returnUrl ??= Url.Content("~/");
             // Get the information about the user from the external login provider
             var info = await _signInManager.GetExternalLoginInfoAsync();
             if (info == null)
             {
-                ErrorMessage = "Error loading external login information during confirmation.";
+                ErrorMessage = "Lỗi khi lấy thông tin từ dịch vụ ngoài.";
                 return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
             }
 
             if (ModelState.IsValid)
             {
+                // Input.Email
+                var registeredUser = await _userManager.FindByEmailAsync(Input.Email);
+                string externalEmail = null;
+                AppUser externalEmailUser = null;
+
+                // Claim ~ Đặc tính mô tả 1 đối tượng
+                if (info.Principal.HasClaim(c => c.Type == ClaimTypes.Email))
+                {
+                    externalEmail = info.Principal.FindFirstValue(ClaimTypes.Email);
+                }
+
+                if(externalEmail != null)
+                {
+                    externalEmailUser = await _userManager.FindByEmailAsync(externalEmail);
+                }
+
+                if((registeredUser != null) && (externalEmailUser != null))
+                {
+                    // registeredUser và externalEmailUser là 1
+                    if (registeredUser.Id == externalEmailUser.Id)
+                    {
+                        // Liên kết tài khoản, đăng nhập
+                        var resultLink = await _userManager.AddLoginAsync(registeredUser, info);
+                        if(resultLink.Succeeded)
+                        {
+                            await _signInManager.SignInAsync(registeredUser, isPersistent: false);
+                            return LocalRedirect(returnUrl);
+                        }
+                    }
+                    // registeredUser != externalEmailUser
+                    else
+                    {
+                        /*
+                            info => user1 (mail1@abc.com) 
+                                 => user2 (mail2@abc.com)
+                        */
+                        ModelState.AddModelError(string.Empty, "Không liên kết được tài khoản, hãy sử dụng Email khác");
+                        return Page();
+                    }
+                }
+
+                if(externalEmailUser != null && registeredUser == null)
+                {
+                    ModelState.AddModelError(string.Empty, "Không hỗ trợ tạo tài khoản mới - có email khác với email tạo từ dịch vụ ngoài.");
+                    return Page();
+                }
+
+                if(externalEmailUser == null && externalEmail == Input.Email)
+                {
+                    AppUser newUser = new()
+                    {
+                        UserName = Input.Email,
+                        Email = Input.Email,
+                    };
+
+                    var resultNewUser = await _userManager.CreateAsync(newUser);
+                    if(resultNewUser.Succeeded)
+                    {
+                        await _userManager.AddLoginAsync(newUser, info);
+                        var code = await _userManager.GenerateEmailConfirmationTokenAsync(newUser);
+                        await _userManager.ConfirmEmailAsync(newUser, code);
+
+                        await _signInManager.SignInAsync(newUser, isPersistent: false);
+
+                        return LocalRedirect(returnUrl);
+                    }
+                    else
+                    {
+                        ModelState.AddModelError(string.Empty, "Không tạo được tài khoản mới.");
+                        return Page();
+                    }
+                }
+
                 var user = CreateUser();
 
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);

@@ -17,6 +17,10 @@ using Microsoft.EntityFrameworkCore;
 
     Them tat ca cac file razor can thiet vao identity
         -> dotnet aspnet-codegenerator identity -dc ASP_EF.Models.MyBlogContext
+
+    - Google: https://localhost:7239/dang-nhap-tu-google
+        + client ID : 590732606937-gqr5n361be7eu9l24u99e7c3585sjtd4.apps.googleusercontent.com
+        + Client Secret: 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
 */
 
 namespace ASP_EF
@@ -87,6 +91,25 @@ namespace ASP_EF
                 options.LogoutPath = "/logout/";
                 options.AccessDeniedPath = "/truycapbituchoi.html/";
             });
+
+            // Đăng ký dịch vụ Google
+            services.AddAuthentication()
+                    .AddGoogle(options =>
+                    {
+                        var ggconfig = builder.Configuration.GetSection("Authentication:Google");
+                        options.ClientId = ggconfig["ClientId"];
+                        options.ClientSecret = ggconfig["ClientSecret"];
+                        // https://localhost:7239/dang-nhap-tu-google
+                        options.CallbackPath = "/dang-nhap-tu-google";
+                    })
+                    .AddFacebook(options =>
+                    {
+                        var fbconfig = builder.Configuration.GetSection("Authentication:Facebook");
+                        options.AppId = fbconfig["AppId"];
+                        options.AppSecret = fbconfig["AppSecret"];
+                        // https://localhost:7239/dang-nhap-tu-facebook
+                        options.CallbackPath = "/dang-nhap-tu-facebook";
+                    });
 
             var app = builder.Build();
 
