@@ -4,10 +4,8 @@
 
 namespace ASP_EF.Migrations
 {
-    /// <inheritdoc />
     public partial class UpdateUser : Migration
     {
-        /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<string>(
@@ -19,7 +17,6 @@ namespace ASP_EF.Migrations
                 defaultValue: "");
         }
 
-        /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(

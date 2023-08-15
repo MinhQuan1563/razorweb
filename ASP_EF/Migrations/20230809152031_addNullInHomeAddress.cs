@@ -4,10 +4,8 @@
 
 namespace ASP_EF.Migrations
 {
-    /// <inheritdoc />
     public partial class addNullInHomeAddress : Migration
     {
-        /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
 
@@ -22,7 +20,6 @@ namespace ASP_EF.Migrations
                 oldMaxLength: 400);
         }
 
-        /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AlterColumn<string>(

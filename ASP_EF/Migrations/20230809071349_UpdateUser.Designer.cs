@@ -15,7 +15,6 @@ namespace ASP_EF.Migrations
     [Migration("20230809071349_UpdateUser")]
     partial class UpdateUser
     {
-        /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
