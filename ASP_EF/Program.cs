@@ -9,7 +9,17 @@ using Microsoft.EntityFrameworkCore;
 
     - Identity
         - Authentication: Xác định danh tính -> Login, Logout, ...
+
         - Authorization: Xác định quyền truy cập
+            - Role-based authorization: Xác định quyền theo vai trò
+            - Role (vai trò): Admin, Editer, Manage, Member, ...
+
+        /Areas/Admin/Pages/Role
+        Index
+        Create
+        Edit
+        Delete
+
         - Quản lý user: Signup, User, role, ...
  
     /Identity/Account/Login
@@ -110,6 +120,9 @@ namespace ASP_EF
                         // https://localhost:7239/dang-nhap-tu-facebook
                         options.CallbackPath = "/dang-nhap-tu-facebook";
                     });
+
+            // Đăng ký dịch vụ AppIdentityErrorDescriber để nạp chồng IdentityErrorDescriber
+            services.AddSingleton<IdentityErrorDescriber, AppIdentityErrorDescriber>();
 
             var app = builder.Build();
 
