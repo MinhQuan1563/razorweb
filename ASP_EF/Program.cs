@@ -3,6 +3,7 @@ using ASP_EF.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 /*
     - CREATE, READ, UPDATE, DELETE (CRUD)
@@ -11,8 +12,18 @@ using Microsoft.EntityFrameworkCore;
         - Authentication: Xác định danh tính -> Login, Logout, ...
 
         - Authorization: Xác định quyền truy cập
-            - Role-based authorization: Xác định quyền theo vai trò
             - Role (vai trò): Admin, Editer, Manage, Member, ...
+            * Role-based authorization: Xác định quyền theo vai trò
+            * Policy-based authorization
+            * Claims-based authorization
+                Claim: Đặc tính, tính chất của đối tượng (User)
+
+                VD: Bằng lái B2 (Role) => Được lái 4 chỗ
+                    - Ngày sinh -> Claim
+                    - Họ tên -> Claim
+                    
+                    Mua rượu ( > 18 tuổi)
+                    - Kiểm tra ngày sinh: Claims-based authorization
 
         /Areas/Admin/Pages/Role
         Index
@@ -124,6 +135,40 @@ namespace ASP_EF
             // Đăng ký dịch vụ AppIdentityErrorDescriber để nạp chồng IdentityErrorDescriber
             services.AddSingleton<IdentityErrorDescriber, AppIdentityErrorDescriber>();
 
+            // Add Policy
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("AllowEditRole", policyBuilder =>
+                {
+                    // Điều kiện của Policy
+                    policyBuilder.RequireAuthenticatedUser();
+                    /*policyBuilder.RequireRole("Admin");
+                    policyBuilder.RequireRole("Editor");*/
+
+                    policyBuilder.RequireClaim("canedit", "user", "update");
+
+                    // Claims-based authorization
+                    /*policyBuilder.RequireClaim("Tên Claim", "giatri1", "giatri2");
+                    policyBuilder.RequireClaim("Tên Claim", new string[]
+                    {
+                        "giatri1",
+                        "giatri2"
+                    });*/
+                    
+                    /*IdentityRoleClaim<string> roleClaim;
+                    IdentityUserClaim<string> userClaim;
+                    Claim claim; // Khác 2 cái trên ở chỗ chỉ có ClaimType và ClaimValue*/
+
+                });
+
+                /*options.AddPolicy("P2", policyBuilder =>
+                {
+                    // Điều kiện của Policy
+                });*/
+            });
+
+
+            // App
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
