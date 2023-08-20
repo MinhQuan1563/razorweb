@@ -1,0 +1,34 @@
+﻿@page "/admin/add-roleclaim/{roleid}"
+@model ASP_EF.Areas.Admin.Pages.Role.AddRoleClaimModel
+@{
+    ViewData["Title"] = "Thêm đặc tính (claim) cho role";
+}
+
+<h2>@ViewData["Title"]: @Model.Role.Name</h2>
+
+<partial name="_StatusMessage" model="@Model.StatusMessage" />
+
+<hr />
+<div class="row">
+    <div class="col-md-6">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Input.ClaimType" class="control-label"></label>
+                <input asp-for="Input.ClaimType" class="form-control" />
+                <span asp-validation-for="Input.ClaimType" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Input.ClaimValue" class="control-label"></label>
+                <input asp-for="Input.ClaimValue" class="form-control" />
+                <span asp-validation-for="Input.ClaimValue" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mt-2">
+                <input type="submit" value="Tạo mới" class="btn btn-primary" />
+                <a class="btn btn-secondary" asp-page="./Edit" asp-route-roleid="@Model.Role.Id">Chỉnh sửa role</a>
+            </div>
+        </form>
+    </div>
+</div>

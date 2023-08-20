@@ -1,0 +1,46 @@
+﻿@page "/admin/edit-role/{roleid}"
+@model ASP_EF.Areas.Admin.Pages.Role.EditModel
+@{
+    ViewData["Title"] = "Cập nhật role";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<partial name="_StatusMessage" model="@Model.StatusMessage" />
+
+<hr />
+<div class="row">
+    <div class="col-md-6">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Input.Name" class="control-label"></label>
+                <input asp-for="Input.Name" class="form-control" />
+                <span asp-validation-for="Input.Name" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mt-2">
+                <input type="submit" value="Cập nhật" class="btn btn-success" />
+                <a class="btn btn-secondary" asp-page="./Index">Danh sách các role</a>
+            </div>
+        </form>
+        <hr />
+        <p>Các thuộc tính (claim) của role: </p>
+
+        <a asp-page="./AddRoleClaim" asp-route-roleid="@Model.Role.Id">+ Thêm claim</a>
+
+        @if(Model.Claims.Count > 0)
+        {
+            <ul>
+                @foreach(var claim in Model.Claims)
+                {
+                    <li>
+                        <a asp-page="./EditRoleClaim" asp-route-claimid="@claim.Id">
+                            @claim.ClaimType : @claim.ClaimValue
+                        </a>
+                    </li>
+                }
+            </ul>
+        }
+    </div>
+</div>

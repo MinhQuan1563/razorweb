@@ -15,7 +15,6 @@ namespace ASP_EF.Migrations
     [Migration("20230803155237_initdb")]
     partial class initdb
     {
-        /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
