@@ -1,5 +1,7 @@
 using ASP_EF.Models;
+using ASP_EF.Security.Requirements;
 using ASP_EF.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
@@ -145,7 +147,7 @@ namespace ASP_EF
                     /*policyBuilder.RequireRole("Admin");
                     policyBuilder.RequireRole("Editor");*/
 
-                    policyBuilder.RequireClaim("canedit", "user", "update");
+                    //policyBuilder.RequireClaim("canedit", "user", "update");
 
                     // Claims-based authorization
                     /*policyBuilder.RequireClaim("Tên Claim", "giatri1", "giatri2");
@@ -161,12 +163,26 @@ namespace ASP_EF
 
                 });
 
-                /*options.AddPolicy("P2", policyBuilder =>
+                options.AddPolicy("InGenZ", policyBuilder =>
                 {
-                    // Điều kiện của Policy
-                });*/
-            });
+                    policyBuilder.RequireAuthenticatedUser();
+                    policyBuilder.Requirements.Add(new GenZRequirement()); // GenZRequirement
 
+                    // new GenZRequirement() -> Authorization handler
+                });
+
+                options.AddPolicy("ShowAdminMenu", pb =>
+                {
+                    pb.RequireRole("Admin");
+                });
+
+                options.AddPolicy("CanUpdateArticle", pb =>
+                {
+                    pb.Requirements.Add(new ArticleUpdateRequirement());
+                });
+            });
+            
+            services.AddTransient<IAuthorizationHandler, AppAuthorizationHandler>();
 
             // App
             var app = builder.Build();

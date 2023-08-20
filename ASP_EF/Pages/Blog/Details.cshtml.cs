@@ -1,19 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using ASP_EF.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using ASP_EF.Models;
 
 namespace ASP_EF.Pages.Blog
 {
+    [Authorize(Policy = "InGenZ")] // Năm sinh từ 1997 -> 2012
     public class DetailsModel : PageModel
     {
-        private readonly ASP_EF.Models.MyBlogContext _context;
+        private readonly MyBlogContext _context;
 
-        public DetailsModel(ASP_EF.Models.MyBlogContext context)
+        public DetailsModel(MyBlogContext context)
         {
             _context = context;
         }
